@@ -176,6 +176,11 @@ extension MainViewController: UITableViewDataSource, UITableViewDelegate {
             paginationSearchString = historySearchRequest
             apiManager?.getRepositories(with: historySearchRequest, page: 1)
             tableView.reloadData()
+        } else {
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let vc = storyboard.instantiateViewController(withIdentifier: "DetailViewController") as! DetailViewController
+            vc.items = repos
+            show(vc, sender: nil)
         }
     }
 }

@@ -18,6 +18,7 @@
 		5EAC36BF25F3909F00BF9072 /* RepositoryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EAC36BE25F3909F00BF9072 /* RepositoryModel.swift */; };
 		5EAC36C825F391CA00BF9072 /* APIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EAC36C725F391CA00BF9072 /* APIManager.swift */; };
 		5EAC36CB25F39FED00BF9072 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EAC36CA25F39FED00BF9072 /* MainViewController.swift */; };
+		5EEA78DB25F7E80A001AF4F4 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EEA78DA25F7E80A001AF4F4 /* DetailViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,6 +36,7 @@
 		5EAC36BE25F3909F00BF9072 /* RepositoryModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositoryModel.swift; sourceTree = "<group>"; };
 		5EAC36C725F391CA00BF9072 /* APIManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIManager.swift; sourceTree = "<group>"; };
 		5EAC36CA25F39FED00BF9072 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
+		5EEA78DA25F7E80A001AF4F4 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		A79CAA358DD966255EDA5C0C /* Pods-dStar.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-dStar.release.xcconfig"; path = "Target Support Files/Pods-dStar/Pods-dStar.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -82,6 +84,7 @@
 				5EAC36BE25F3909F00BF9072 /* RepositoryModel.swift */,
 				5EAC36C725F391CA00BF9072 /* APIManager.swift */,
 				5EAC36CA25F39FED00BF9072 /* MainViewController.swift */,
+				5EEA78DA25F7E80A001AF4F4 /* DetailViewController.swift */,
 			);
 			path = dStar;
 			sourceTree = "<group>";
@@ -224,6 +227,7 @@
 				5EAC36A325F388C500BF9072 /* AppDelegate.swift in Sources */,
 				5EAC36A525F388C500BF9072 /* SceneDelegate.swift in Sources */,
 				5EAC36BC25F38FE400BF9072 /* RepositoryCell.swift in Sources */,
+				5EEA78DB25F7E80A001AF4F4 /* DetailViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

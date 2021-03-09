@@ -64,7 +64,41 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="928.98550724637687" y="93.75"/>
+            <point key="canvasLocation" x="812" y="-82"/>
+        </scene>
+        <!--Detail View Controller-->
+        <scene sceneID="VnE-53-lNd">
+            <objects>
+                <viewController storyboardIdentifier="DetailViewController" id="KEm-hf-nqW" customClass="DetailViewController" customModule="dStar" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="uJF-ay-ydO">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="E1W-v7-o5M">
+                                <rect key="frame" x="107" y="428" width="200" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="200" id="s4M-P6-MKO"/>
+                                    <constraint firstAttribute="height" constant="40" id="sQa-j5-Oj3"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="b6K-x1-RDr"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="E1W-v7-o5M" firstAttribute="centerY" secondItem="uJF-ay-ydO" secondAttribute="centerY" id="CIh-0g-Zkf"/>
+                            <constraint firstItem="E1W-v7-o5M" firstAttribute="centerX" secondItem="uJF-ay-ydO" secondAttribute="centerX" id="gzT-dD-otK"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="reposetoryName" destination="E1W-v7-o5M" id="0kp-R9-iGa"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="fe7-b6-jr4" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1573.913043478261" y="-82.366071428571431"/>
         </scene>
     </scenes>
     <resources>
