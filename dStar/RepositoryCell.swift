@@ -7,7 +7,9 @@
 
 import UIKit
 
-class RepoCell: UITableViewCell {
+class RepositoryCell: UITableViewCell {
+    
+    static let Identifier = "RepositoryCell"
 
     @IBOutlet weak var repoNameLabel: UILabel!
     

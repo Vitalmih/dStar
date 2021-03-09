@@ -14,7 +14,7 @@
 		5EAC36AD25F388C500BF9072 /* dStar.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 5EAC36AB25F388C500BF9072 /* dStar.xcdatamodeld */; };
 		5EAC36AF25F388CE00BF9072 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5EAC36AE25F388CE00BF9072 /* Assets.xcassets */; };
 		5EAC36B225F388CE00BF9072 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5EAC36B025F388CE00BF9072 /* LaunchScreen.storyboard */; };
-		5EAC36BC25F38FE400BF9072 /* RepoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EAC36BB25F38FE400BF9072 /* RepoCell.swift */; };
+		5EAC36BC25F38FE400BF9072 /* RepositoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EAC36BB25F38FE400BF9072 /* RepositoryCell.swift */; };
 		5EAC36BF25F3909F00BF9072 /* RepositoryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EAC36BE25F3909F00BF9072 /* RepositoryModel.swift */; };
 		5EAC36C825F391CA00BF9072 /* APIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EAC36C725F391CA00BF9072 /* APIManager.swift */; };
 		5EAC36CB25F39FED00BF9072 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EAC36CA25F39FED00BF9072 /* MainViewController.swift */; };
@@ -31,7 +31,7 @@
 		5EAC36AE25F388CE00BF9072 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5EAC36B125F388CE00BF9072 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		5EAC36B325F388CE00BF9072 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		5EAC36BB25F38FE400BF9072 /* RepoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepoCell.swift; sourceTree = "<group>"; };
+		5EAC36BB25F38FE400BF9072 /* RepositoryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositoryCell.swift; sourceTree = "<group>"; };
 		5EAC36BE25F3909F00BF9072 /* RepositoryModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositoryModel.swift; sourceTree = "<group>"; };
 		5EAC36C725F391CA00BF9072 /* APIManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIManager.swift; sourceTree = "<group>"; };
 		5EAC36CA25F39FED00BF9072 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
@@ -78,7 +78,7 @@
 				5EAC36B025F388CE00BF9072 /* LaunchScreen.storyboard */,
 				5EAC36B325F388CE00BF9072 /* Info.plist */,
 				5EAC36AB25F388C500BF9072 /* dStar.xcdatamodeld */,
-				5EAC36BB25F38FE400BF9072 /* RepoCell.swift */,
+				5EAC36BB25F38FE400BF9072 /* RepositoryCell.swift */,
 				5EAC36BE25F3909F00BF9072 /* RepositoryModel.swift */,
 				5EAC36C725F391CA00BF9072 /* APIManager.swift */,
 				5EAC36CA25F39FED00BF9072 /* MainViewController.swift */,
@@ -223,7 +223,7 @@
 				5EAC36BF25F3909F00BF9072 /* RepositoryModel.swift in Sources */,
 				5EAC36A325F388C500BF9072 /* AppDelegate.swift in Sources */,
 				5EAC36A525F388C500BF9072 /* SceneDelegate.swift in Sources */,
-				5EAC36BC25F38FE400BF9072 /* RepoCell.swift in Sources */,
+				5EAC36BC25F38FE400BF9072 /* RepositoryCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
