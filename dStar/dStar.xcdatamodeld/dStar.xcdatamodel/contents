@@ -1,4 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1" systemVersion="11A491" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="false" userDefinedModelVersionIdentifier="">
-    <elements/>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="17709" systemVersion="20D91" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="Repository" representedClassName=".Repository" syncable="YES" codeGenerationType="class">
+        <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="starsCount" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="url" optional="YES" attributeType="String"/>
+        <relationship name="parentSearchWord" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SearchResultsModel" inverseName="results" inverseEntity="SearchResultsModel"/>
+    </entity>
+    <entity name="SearchResultsModel" representedClassName=".SearchResultsModel" syncable="YES" codeGenerationType="class">
+        <attribute name="searchWord" attributeType="String"/>
+        <relationship name="results" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Repository" inverseName="parentSearchWord" inverseEntity="Repository"/>
+    </entity>
+    <elements>
+        <element name="Repository" positionX="-49.47161865234375" positionY="-68.5880126953125" width="128" height="118"/>
+        <element name="SearchResultsModel" positionX="-379.6513061523437" positionY="-113.8886413574219" width="128" height="73"/>
+    </elements>
 </model>

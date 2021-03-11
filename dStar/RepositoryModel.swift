@@ -25,6 +25,8 @@ struct Items: Codable {
     let name: String
     let fullName: String
     let owner: Owner
+    let url: String
+    let starsCount: Int
     
     enum CodingKeys: String, CodingKey {
         case id
@@ -32,6 +34,8 @@ struct Items: Codable {
         case name
         case fullName = "full_name"
         case owner
+        case url
+        case starsCount = "stargazers_count"
     }
 }
 

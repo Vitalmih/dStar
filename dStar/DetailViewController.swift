@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import CoreData
 
 class DetailViewController: UIViewController {
 
@@ -13,9 +14,11 @@ class DetailViewController: UIViewController {
    
     var items = [Items]()
     
+ 
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        navigationController?.navigationBar.prefersLargeTitles = true
         view.backgroundColor = .systemPurple
         showRepoName()
     }

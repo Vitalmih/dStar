@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import CoreData
 
 enum NavigationTitle: String {
     case Repositories
@@ -16,11 +17,15 @@ class MainViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
     
+    var searchResults = [SearchResultsModel]()
+    var resultRepo = [Repository]()
+    var searchResultItem: SearchResultsModel?
+    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    
     var apiManager: RepositoriesNetworkManagerProtocol?
     private var historySearchRequests: [String] = []
     private var paginationSearchString = ""
     private var searchingByName: [String] = []
-    private var currentPage = 1
     private var isSearching = false
     private var repos = [Items]()
     private let searchBar = UISearchBar()
@@ -32,6 +37,8 @@ class MainViewController: UIViewController {
         configureNavigationBar()
         configureSearchBar()
         configureTableView()
+        
+        loadResult()
     }
     
     private func configureTableView() {
@@ -123,10 +130,22 @@ extension MainViewController: UISearchBarDelegate {
 //MARK: - RepositoriesNetworkManagerDelegate
 extension MainViewController: RepositoriesNetworkManagerDelegate {
     func didGetRepositories(repositories: Repositories) {
+        
+        searchResultItem?.searchWord = paginationSearchString
+        searchResultItem?.results?.setValue(repositories, forKey: "results")
+        
+        
+//        let newRepo = Repository(context: context)
         for repo in repositories.items {
             self.repos.append(repo)
+//            newRepo.id = Int64(repo.id)
+//            newRepo.name = repo.name
+//            newRepo.starsCount = Int64(repo.starsCount)
+//            newRepo.parentSearchWord = searchResultItem
         }
+//        resultRepo.append(newRepo)
         self.tableView.reloadData()
+        saveResult()
     }
     
     func didFailWithError(error: Error) {
@@ -161,6 +180,7 @@ extension MainViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        var currentPage = 1
         if indexPath.row == repos.count - 3 {
             currentPage += 1
             apiManager?.getRepositories(with: paginationSearchString, page: currentPage)
@@ -181,6 +201,31 @@ extension MainViewController: UITableViewDataSource, UITableViewDelegate {
             let vc = storyboard.instantiateViewController(withIdentifier: "DetailViewController") as! DetailViewController
             vc.items = repos
             show(vc, sender: nil)
+        }
+    }
+}
+
+extension MainViewController {
+    
+    func saveResult() {
+        do {
+            try context.save()
+        } catch {
+           print(error)
+        }
+    }
+    
+    func loadResult() {
+        let request: NSFetchRequest<Repository> = Repository.fetchRequest()
+        
+        do {
+            resultRepo = try context.fetch(request)
+           
+            for repo in resultRepo {
+                print(repo.name)
+            }
+        } catch {
+            print(error)
         }
     }
 }

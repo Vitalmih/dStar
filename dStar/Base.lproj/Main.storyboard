@@ -75,9 +75,8 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="E1W-v7-o5M">
-                                <rect key="frame" x="107" y="428" width="200" height="40"/>
+                                <rect key="frame" x="5" y="428" width="404" height="40"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="200" id="s4M-P6-MKO"/>
                                     <constraint firstAttribute="height" constant="40" id="sQa-j5-Oj3"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -89,6 +88,8 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="E1W-v7-o5M" firstAttribute="centerY" secondItem="uJF-ay-ydO" secondAttribute="centerY" id="CIh-0g-Zkf"/>
+                            <constraint firstItem="E1W-v7-o5M" firstAttribute="leading" secondItem="b6K-x1-RDr" secondAttribute="leading" constant="5" id="Iyf-OC-mqY"/>
+                            <constraint firstItem="b6K-x1-RDr" firstAttribute="trailing" secondItem="E1W-v7-o5M" secondAttribute="trailing" constant="5" id="Lf3-fc-2Me"/>
                             <constraint firstItem="E1W-v7-o5M" firstAttribute="centerX" secondItem="uJF-ay-ydO" secondAttribute="centerX" id="gzT-dD-otK"/>
                         </constraints>
                     </view>
