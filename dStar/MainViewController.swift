@@ -11,26 +11,25 @@ import CoreData
 enum NavigationTitle: String {
     case Repositories
     case History
+    case Repository
 }
 
 class MainViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
-    
     var searchResults = [SearchResultsModel]()
-    
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
     var apiManager: RepositoriesNetworkManagerProtocol?
     private var paginationSearchString = ""
     private var isSearching = false
-    private var repos = [Items]()
+    private var receivedRepositories = [Items]()
     private let searchBar = UISearchBar()
-    var coreDataString = ""
+    var searchWord = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemPurple
+        view.backgroundColor = .systemTeal
         apiManager?.delegate = self
         configureNavigationBar()
         configureSearchBar()
@@ -40,6 +39,8 @@ class MainViewController: UIViewController {
     private func configureTableView() {
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.separatorStyle = .none
+        tableView.backgroundColor = .white
     }
     
     private func configureNavigationBar() {
@@ -48,8 +49,8 @@ class MainViewController: UIViewController {
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(handleShowSearchBar))
         navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .compose, target: self, action: #selector(handleShowHistorySearch))
         navigationController?.navigationBar.tintColor = .black
-        navigationController?.navigationBar.backgroundColor = .systemPurple
-        navigationController?.navigationBar.barTintColor = .systemPurple
+        navigationController?.navigationBar.backgroundColor = .systemTeal
+        navigationController?.navigationBar.barTintColor = .systemTeal
         navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.black]
         navigationController?.navigationBar.largeTitleTextAttributes = [.foregroundColor: UIColor.black]
     }
@@ -66,8 +67,8 @@ class MainViewController: UIViewController {
         search(shouldShow: false)
         navigationItem.title = NavigationTitle.History.rawValue
         isSearching = true
-        tableView.reloadData()
         loadResult()
+        tableView.reloadData()
     }
     
     private func configureSearchBar() {
@@ -106,7 +107,7 @@ extension MainViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         var searchString = ""
         guard let text = searchBar.text else { return }
-        coreDataString = text
+        searchWord = text
         for char in text {
             if char == " " {
                 searchString.append("+")
@@ -114,23 +115,24 @@ extension MainViewController: UISearchBarDelegate {
                 searchString.append(char)
             }
         }
-        
         paginationSearchString = searchString
         apiManager?.getRepositories(with: searchString, page: 1)
-        repos = []
+        receivedRepositories = []
         searchString = ""
         searchBar.text = ""
         tableView.reloadData()
     }
 }
 
+
+
 //MARK: - RepositoriesNetworkManagerDelegate
 extension MainViewController: RepositoriesNetworkManagerDelegate {
     func didGetRepositories(repositories: Repositories) {
         
         let searchResultItem = SearchResultsModel(context: context)
-            searchResultItem.searchWord = coreDataString
-
+        searchResultItem.searchWord = searchWord
+        
         let results: [Repository] = repositories.items.map { [unowned context] item in
             let repository = Repository(context: context)
             repository.id = Int64(item.id)
@@ -147,7 +149,7 @@ extension MainViewController: RepositoriesNetworkManagerDelegate {
         searchResultItem.results = searchModelResults
         saveResult()
         
-        repos.append(contentsOf: repositories.items)
+        receivedRepositories.append(contentsOf: repositories.items)
         self.tableView.reloadData()
     }
     
@@ -165,26 +167,26 @@ extension MainViewController: UITableViewDataSource, UITableViewDelegate {
         if isSearching {
             return searchResults.count
         } else {
-            return repos.count
+            return receivedRepositories.count
         }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: RepositoryCell.Identifier) as! RepositoryCell
         if isSearching {
-            let repoName = searchResults[indexPath.row].searchWord
-            cell.repoNameLabel.text = repoName
+            let searchWord = searchResults[indexPath.row].searchWord
+            cell.repoNameLabel.text = searchWord
             return cell
         } else {
-            let repo = repos[indexPath.row]
-            cell.repoNameLabel.text = repo.name
+            let repository = receivedRepositories[indexPath.row]
+            cell.repoNameLabel.text = repository.name
             return cell
         }
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         var currentPage = 1
-        if indexPath.row == repos.count - 3 {
+        if indexPath.row == receivedRepositories.count - 3 {
             currentPage += 1
             apiManager?.getRepositories(with: paginationSearchString, page: currentPage)
         }
@@ -194,30 +196,27 @@ extension MainViewController: UITableViewDataSource, UITableViewDelegate {
         if isSearching {
             isSearching = false
             navigationItem.title = NavigationTitle.Repositories.rawValue
-            let historySearchRequest = searchResults[indexPath.row].searchWord
-            let array = searchResults[indexPath.row].results?.allObjects as NSArray?
-            
-        
-            for i in array! {
-                print(i)
+            let historySearchWordRequest = searchResults[indexPath.row].searchWord ?? ""
+            let coreDataRepositoriesModel = searchResults[indexPath.row].results?.allObjects.compactMap { $0  as? Repository} ?? []
+            receivedRepositories = []
+            coreDataRepositoriesModel.forEach { item in
+                let repositoryItem = Items(id: Int(item.id), nodeID: item.nodeID ?? "", name: item.name ?? "", fullName: item.fullName ?? "", owner: nil, url: item.url ?? "", starsCount: Int(item.starsCount))
+                receivedRepositories.append(repositoryItem)
             }
-            
-            
-
-            repos = []
-            paginationSearchString = historySearchRequest!
+            paginationSearchString = historySearchWordRequest
             tableView.reloadData()
         } else {
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let vc = storyboard.instantiateViewController(withIdentifier: "DetailViewController") as! DetailViewController
-            vc.items = repos
+            vc.detailRepositoryData = receivedRepositories
+    
             show(vc, sender: nil)
         }
     }
 }
 
+//MARK: - Core Data Methods
 extension MainViewController {
-    
     func saveResult() {
         do {
             try context.save()
@@ -227,16 +226,11 @@ extension MainViewController {
     }
     
     func loadResult() {
-            let request: NSFetchRequest<SearchResultsModel> = SearchResultsModel.fetchRequest()
-            
-            do {
-                let results = try context.fetch(request)
-                searchResults = results
-                let repositories = results.compactMap { $0.results?.allObjects as? NSArray }
-                
-            } catch {
-                print(error)
-            }
-        tableView.reloadData()
+        let request: NSFetchRequest<SearchResultsModel> = SearchResultsModel.fetchRequest()
+        do {
+            searchResults = try context.fetch(request)
+        } catch {
+            print(error)
         }
+    }
 }

@@ -12,22 +12,15 @@ class DetailViewController: UIViewController {
 
     @IBOutlet weak var reposetoryName: UILabel!
    
-    var items = [Items]()
+    var detailRepositoryData = [Items]()
     
+   
  
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        navigationController?.navigationBar.prefersLargeTitles = true
-        view.backgroundColor = .systemPurple
-        showRepoName()
+        view.backgroundColor = .systemTeal
+       
     }
     
-    func showRepoName() {
-        for item in items {
-            reposetoryName.text = item.name
-        }
-    }
-
-   
 }
