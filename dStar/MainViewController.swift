@@ -18,17 +18,15 @@ class MainViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     
     var searchResults = [SearchResultsModel]()
-    var resultRepo = [Repository]()
-    var searchResultItem: SearchResultsModel?
+    
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
     var apiManager: RepositoriesNetworkManagerProtocol?
-    private var historySearchRequests: [String] = []
     private var paginationSearchString = ""
-    private var searchingByName: [String] = []
     private var isSearching = false
     private var repos = [Items]()
     private let searchBar = UISearchBar()
+    var coreDataString = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,8 +35,6 @@ class MainViewController: UIViewController {
         configureNavigationBar()
         configureSearchBar()
         configureTableView()
-        
-        loadResult()
     }
     
     private func configureTableView() {
@@ -71,6 +67,7 @@ class MainViewController: UIViewController {
         navigationItem.title = NavigationTitle.History.rawValue
         isSearching = true
         tableView.reloadData()
+        loadResult()
     }
     
     private func configureSearchBar() {
@@ -109,8 +106,7 @@ extension MainViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         var searchString = ""
         guard let text = searchBar.text else { return }
-        historySearchRequests.append(text)
-        
+        coreDataString = text
         for char in text {
             if char == " " {
                 searchString.append("+")
@@ -118,6 +114,7 @@ extension MainViewController: UISearchBarDelegate {
                 searchString.append(char)
             }
         }
+        
         paginationSearchString = searchString
         apiManager?.getRepositories(with: searchString, page: 1)
         repos = []
@@ -131,21 +128,27 @@ extension MainViewController: UISearchBarDelegate {
 extension MainViewController: RepositoriesNetworkManagerDelegate {
     func didGetRepositories(repositories: Repositories) {
         
-        searchResultItem?.searchWord = paginationSearchString
-        searchResultItem?.results?.setValue(repositories, forKey: "results")
-        
-        
-//        let newRepo = Repository(context: context)
-        for repo in repositories.items {
-            self.repos.append(repo)
-//            newRepo.id = Int64(repo.id)
-//            newRepo.name = repo.name
-//            newRepo.starsCount = Int64(repo.starsCount)
-//            newRepo.parentSearchWord = searchResultItem
+        let searchResultItem = SearchResultsModel(context: context)
+            searchResultItem.searchWord = coreDataString
+
+        let results: [Repository] = repositories.items.map { [unowned context] item in
+            let repository = Repository(context: context)
+            repository.id = Int64(item.id)
+            repository.name = item.name
+            repository.starsCount = Int64(item.starsCount)
+            repository.nodeID = item.nodeID
+            repository.url = item.url
+            repository.fullName = item.fullName
+            return repository
         }
-//        resultRepo.append(newRepo)
-        self.tableView.reloadData()
+        
+        let searchModelResults = searchResultItem.mutableSetValue(forKey: #keyPath(SearchResultsModel.results))
+        searchModelResults.addObjects(from: results)
+        searchResultItem.results = searchModelResults
         saveResult()
+        
+        repos.append(contentsOf: repositories.items)
+        self.tableView.reloadData()
     }
     
     func didFailWithError(error: Error) {
@@ -160,7 +163,7 @@ extension MainViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if isSearching {
-            return historySearchRequests.count
+            return searchResults.count
         } else {
             return repos.count
         }
@@ -169,7 +172,7 @@ extension MainViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: RepositoryCell.Identifier) as! RepositoryCell
         if isSearching {
-            let repoName = historySearchRequests[indexPath.row]
+            let repoName = searchResults[indexPath.row].searchWord
             cell.repoNameLabel.text = repoName
             return cell
         } else {
@@ -191,10 +194,18 @@ extension MainViewController: UITableViewDataSource, UITableViewDelegate {
         if isSearching {
             isSearching = false
             navigationItem.title = NavigationTitle.Repositories.rawValue
-            let historySearchRequest = historySearchRequests[indexPath.row]
+            let historySearchRequest = searchResults[indexPath.row].searchWord
+            let array = searchResults[indexPath.row].results?.allObjects as NSArray?
+            
+        
+            for i in array! {
+                print(i)
+            }
+            
+            
+
             repos = []
-            paginationSearchString = historySearchRequest
-            apiManager?.getRepositories(with: historySearchRequest, page: 1)
+            paginationSearchString = historySearchRequest!
             tableView.reloadData()
         } else {
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -211,21 +222,21 @@ extension MainViewController {
         do {
             try context.save()
         } catch {
-           print(error)
+            print(error)
         }
     }
     
     func loadResult() {
-        let request: NSFetchRequest<Repository> = Repository.fetchRequest()
-        
-        do {
-            resultRepo = try context.fetch(request)
-           
-            for repo in resultRepo {
-                print(repo.name)
+            let request: NSFetchRequest<SearchResultsModel> = SearchResultsModel.fetchRequest()
+            
+            do {
+                let results = try context.fetch(request)
+                searchResults = results
+                let repositories = results.compactMap { $0.results?.allObjects as? NSArray }
+                
+            } catch {
+                print(error)
             }
-        } catch {
-            print(error)
+        tableView.reloadData()
         }
-    }
 }

@@ -19,12 +19,12 @@ struct Repositories: Codable {
     }
 }
 
-struct Items: Codable {
+struct Items: Codable, Hashable {
     let id: Int
     let nodeID: String
     let name: String
     let fullName: String
-    let owner: Owner
+
     let url: String
     let starsCount: Int
     
@@ -33,7 +33,7 @@ struct Items: Codable {
         case nodeID = "node_id"
         case name
         case fullName = "full_name"
-        case owner
+       
         case url
         case starsCount = "stargazers_count"
     }
