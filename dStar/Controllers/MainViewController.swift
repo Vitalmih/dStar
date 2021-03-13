@@ -7,6 +7,7 @@
 
 import UIKit
 import CoreData
+import PureLayout
 
 enum NavigationTitle: String {
     case Repositories
@@ -16,31 +17,58 @@ enum NavigationTitle: String {
 
 class MainViewController: UIViewController {
     
-    @IBOutlet weak var tableView: UITableView!
     var searchResults = [SearchResultsModel]()
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-    
     var apiManager: RepositoriesNetworkManagerProtocol?
     private var paginationSearchString = ""
     private var isSearching = false
     private var receivedRepositories = [Items]()
     private let searchBar = UISearchBar()
     var searchWord = ""
+    var tableView = UITableView()
+    var upperView: UIView = {
+        let view = UIView()
+        view.autoSetDimension(.height, toSize: 128)
+        view.backgroundColor = .systemTeal
+        return view
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemTeal
+        view.backgroundColor = .white
         apiManager?.delegate = self
         configureNavigationBar()
         configureSearchBar()
+        addSubViews()
+        setupConstraints()
         configureTableView()
     }
     
+    func addSubViews() {
+        view.addSubview(upperView)
+        view.addSubview(tableView)
+    }
+    
+    func setupConstraints() {
+        upperView.autoPinEdge(toSuperviewEdge: .left)
+        upperView.autoPinEdge(toSuperviewEdge: .right)
+        upperView.autoPinEdge(toSuperviewEdge: .top)
+        tableView.autoPinEdge(toSuperviewSafeArea: .bottom)
+        tableView.autoPinEdge(toSuperviewEdge: .left)
+        tableView.autoPinEdge(toSuperviewEdge: .right)
+        tableView.autoPinEdge(.top, to: .bottom, of: upperView, withOffset: 10)
+    }
+    
     private func configureTableView() {
-        tableView.delegate = self
-        tableView.dataSource = self
+        tableView.register(RepositoryCell.self, forCellReuseIdentifier: RepositoryCell.Identifier)
         tableView.separatorStyle = .none
         tableView.backgroundColor = .white
+        setTableViewDelegates()
+    }
+    
+    private func setTableViewDelegates() {
+        tableView.delegate = self
+        tableView.dataSource = self
     }
     
     private func configureNavigationBar() {
@@ -124,8 +152,6 @@ extension MainViewController: UISearchBarDelegate {
     }
 }
 
-
-
 //MARK: - RepositoriesNetworkManagerDelegate
 extension MainViewController: RepositoriesNetworkManagerDelegate {
     func didGetRepositories(repositories: Repositories) {
@@ -175,11 +201,11 @@ extension MainViewController: UITableViewDataSource, UITableViewDelegate {
         let cell = tableView.dequeueReusableCell(withIdentifier: RepositoryCell.Identifier) as! RepositoryCell
         if isSearching {
             let searchWord = searchResults[indexPath.row].searchWord
-            cell.repoNameLabel.text = searchWord
+            cell.setTitle(name: searchWord?.maxLength(length: 30) ?? "N/A")
             return cell
         } else {
             let repository = receivedRepositories[indexPath.row]
-            cell.repoNameLabel.text = repository.name
+            cell.setTitle(name: repository.name.maxLength(length: 30))
             return cell
         }
     }
@@ -193,6 +219,7 @@ extension MainViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
         if isSearching {
             isSearching = false
             navigationItem.title = NavigationTitle.Repositories.rawValue
@@ -206,11 +233,12 @@ extension MainViewController: UITableViewDataSource, UITableViewDelegate {
             paginationSearchString = historySearchWordRequest
             tableView.reloadData()
         } else {
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let vc = storyboard.instantiateViewController(withIdentifier: "DetailViewController") as! DetailViewController
-            vc.detailRepositoryData = receivedRepositories
-    
-            show(vc, sender: nil)
+            let repository = receivedRepositories[indexPath.row]
+            let dvc = DetailViewController()
+            dvc.detailRepositoryData = repository
+            let nv = UINavigationController(rootViewController: dvc)
+            nv.modalPresentationStyle = .fullScreen
+            present(nv, animated: true, completion: nil)
         }
     }
 }

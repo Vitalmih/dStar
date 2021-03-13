@@ -1,16 +1,20 @@
 PODS:
   - Alamofire (5.4.1)
+  - PureLayout (3.1.7)
 
 DEPENDENCIES:
   - Alamofire (~> 5.2)
+  - PureLayout
 
 SPEC REPOS:
   trunk:
     - Alamofire
+    - PureLayout
 
 SPEC CHECKSUMS:
   Alamofire: 2291f7d21ca607c491dd17642e5d40fdcda0e65c
+  PureLayout: e9e5921347547e1068333f3149e737c972cb6037
 
-PODFILE CHECKSUM: 1adf3932fad9d22bfd1627c615428f1cf33f8905
+PODFILE CHECKSUM: 5985c26ba2c5587c4e167d124f4cae92dfd12914
 
 COCOAPODS: 1.10.1

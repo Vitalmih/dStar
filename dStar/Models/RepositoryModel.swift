@@ -34,7 +34,7 @@ struct Items: Codable {
         case name
         case fullName = "full_name"
         case owner
-        case url
+        case url = "html_url"
         case starsCount = "stargazers_count"
     }
 }

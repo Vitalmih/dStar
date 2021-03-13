@@ -10,7 +10,6 @@
 		533DF629C600F153CD953F7C /* Pods_dStar.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57468F3F46FC7A91603D7099 /* Pods_dStar.framework */; };
 		5EAC36A325F388C500BF9072 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EAC36A225F388C500BF9072 /* AppDelegate.swift */; };
 		5EAC36A525F388C500BF9072 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EAC36A425F388C500BF9072 /* SceneDelegate.swift */; };
-		5EAC36AA25F388C500BF9072 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5EAC36A825F388C500BF9072 /* Main.storyboard */; };
 		5EAC36AD25F388C500BF9072 /* dStar.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 5EAC36AB25F388C500BF9072 /* dStar.xcdatamodeld */; };
 		5EAC36AF25F388CE00BF9072 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5EAC36AE25F388CE00BF9072 /* Assets.xcassets */; };
 		5EAC36B225F388CE00BF9072 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5EAC36B025F388CE00BF9072 /* LaunchScreen.storyboard */; };
@@ -19,6 +18,7 @@
 		5EAC36C825F391CA00BF9072 /* APIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EAC36C725F391CA00BF9072 /* APIManager.swift */; };
 		5EAC36CB25F39FED00BF9072 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EAC36CA25F39FED00BF9072 /* MainViewController.swift */; };
 		5EEA78DB25F7E80A001AF4F4 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EEA78DA25F7E80A001AF4F4 /* DetailViewController.swift */; };
+		5EFCC15B25FD0B0200B596AF /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EFCC15A25FD0B0200B596AF /* Extensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,7 +27,6 @@
 		5EAC369F25F388C500BF9072 /* dStar.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = dStar.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5EAC36A225F388C500BF9072 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5EAC36A425F388C500BF9072 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		5EAC36A925F388C500BF9072 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		5EAC36AC25F388C500BF9072 /* dStar.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = dStar.xcdatamodel; sourceTree = "<group>"; };
 		5EAC36AE25F388CE00BF9072 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5EAC36B125F388CE00BF9072 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -37,6 +36,7 @@
 		5EAC36C725F391CA00BF9072 /* APIManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIManager.swift; sourceTree = "<group>"; };
 		5EAC36CA25F39FED00BF9072 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		5EEA78DA25F7E80A001AF4F4 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
+		5EFCC15A25FD0B0200B596AF /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		A79CAA358DD966255EDA5C0C /* Pods-dStar.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-dStar.release.xcconfig"; path = "Target Support Files/Pods-dStar/Pods-dStar.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -73,20 +73,68 @@
 		5EAC36A125F388C500BF9072 /* dStar */ = {
 			isa = PBXGroup;
 			children = (
-				5EAC36A225F388C500BF9072 /* AppDelegate.swift */,
-				5EAC36A425F388C500BF9072 /* SceneDelegate.swift */,
-				5EAC36A825F388C500BF9072 /* Main.storyboard */,
+				5EFCC16E25FD1CDD00B596AF /* AppDelegates */,
 				5EAC36AE25F388CE00BF9072 /* Assets.xcassets */,
 				5EAC36B025F388CE00BF9072 /* LaunchScreen.storyboard */,
 				5EAC36B325F388CE00BF9072 /* Info.plist */,
-				5EAC36AB25F388C500BF9072 /* dStar.xcdatamodeld */,
-				5EAC36BB25F38FE400BF9072 /* RepositoryCell.swift */,
-				5EAC36BE25F3909F00BF9072 /* RepositoryModel.swift */,
-				5EAC36C725F391CA00BF9072 /* APIManager.swift */,
+				5EFCC16125FD1B3100B596AF /* Servic Managers */,
+				5EFCC15F25FD1B2200B596AF /* Models */,
+				5EFCC16325FD1B4000B596AF /* TableView Cells */,
+				5EFCC15D25FD1B0F00B596AF /* Controllers */,
+				5EFCC16525FD1B5E00B596AF /* Settings */,
+			);
+			path = dStar;
+			sourceTree = "<group>";
+		};
+		5EFCC15D25FD1B0F00B596AF /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
 				5EAC36CA25F39FED00BF9072 /* MainViewController.swift */,
 				5EEA78DA25F7E80A001AF4F4 /* DetailViewController.swift */,
 			);
-			path = dStar;
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		5EFCC15F25FD1B2200B596AF /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				5EAC36AB25F388C500BF9072 /* dStar.xcdatamodeld */,
+				5EAC36BE25F3909F00BF9072 /* RepositoryModel.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		5EFCC16125FD1B3100B596AF /* Servic Managers */ = {
+			isa = PBXGroup;
+			children = (
+				5EAC36C725F391CA00BF9072 /* APIManager.swift */,
+			);
+			path = "Servic Managers";
+			sourceTree = "<group>";
+		};
+		5EFCC16325FD1B4000B596AF /* TableView Cells */ = {
+			isa = PBXGroup;
+			children = (
+				5EAC36BB25F38FE400BF9072 /* RepositoryCell.swift */,
+			);
+			path = "TableView Cells";
+			sourceTree = "<group>";
+		};
+		5EFCC16525FD1B5E00B596AF /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				5EFCC15A25FD0B0200B596AF /* Extensions.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		5EFCC16E25FD1CDD00B596AF /* AppDelegates */ = {
+			isa = PBXGroup;
+			children = (
+				5EAC36A225F388C500BF9072 /* AppDelegate.swift */,
+				5EAC36A425F388C500BF9072 /* SceneDelegate.swift */,
+			);
+			path = AppDelegates;
 			sourceTree = "<group>";
 		};
 		610C5C37F67E67A44AA5EBB4 /* Frameworks */ = {
@@ -167,7 +215,6 @@
 			files = (
 				5EAC36B225F388CE00BF9072 /* LaunchScreen.storyboard in Resources */,
 				5EAC36AF25F388CE00BF9072 /* Assets.xcassets in Resources */,
-				5EAC36AA25F388C500BF9072 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -221,6 +268,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5EAC36CB25F39FED00BF9072 /* MainViewController.swift in Sources */,
+				5EFCC15B25FD0B0200B596AF /* Extensions.swift in Sources */,
 				5EAC36C825F391CA00BF9072 /* APIManager.swift in Sources */,
 				5EAC36AD25F388C500BF9072 /* dStar.xcdatamodeld in Sources */,
 				5EAC36BF25F3909F00BF9072 /* RepositoryModel.swift in Sources */,
@@ -234,14 +282,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		5EAC36A825F388C500BF9072 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				5EAC36A925F388C500BF9072 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		5EAC36B025F388CE00BF9072 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
