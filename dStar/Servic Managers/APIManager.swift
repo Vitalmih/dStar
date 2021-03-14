@@ -37,7 +37,7 @@ final class APIManager: RepositoriesNetworkManagerProtocol {
     
     private func performRequest(pageNumber: Int, perPage: Int = 30, word: String, sortBy: SortType) {
         let urlString = "\(baseURL)sort=\(SortType.self)&page=\(pageNumber)&per_page=\(perPage)&q=\(word)"
-        print(urlString)
+       
         AF.request(urlString, method: .get).responseJSON { response in
             switch response.result {
             case .success:

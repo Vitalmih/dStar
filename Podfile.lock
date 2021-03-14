@@ -1,20 +1,24 @@
 PODS:
   - Alamofire (5.4.1)
   - PureLayout (3.1.7)
+  - SwiftLint (0.43.0)
 
 DEPENDENCIES:
   - Alamofire (~> 5.2)
   - PureLayout
+  - SwiftLint
 
 SPEC REPOS:
   trunk:
     - Alamofire
     - PureLayout
+    - SwiftLint
 
 SPEC CHECKSUMS:
   Alamofire: 2291f7d21ca607c491dd17642e5d40fdcda0e65c
   PureLayout: e9e5921347547e1068333f3149e737c972cb6037
+  SwiftLint: 0c645fdc6feed3e390c1701ab3cc669f88b42752
 
-PODFILE CHECKSUM: 5985c26ba2c5587c4e167d124f4cae92dfd12914
+PODFILE CHECKSUM: bffc9b5c5ab996a64a285cf9a68ff581cc9d6c82
 
 COCOAPODS: 1.10.1

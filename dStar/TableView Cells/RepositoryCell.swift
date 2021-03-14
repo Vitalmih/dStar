@@ -32,4 +32,3 @@ final class RepositoryCell: UITableViewCell {
         repositoryName.autoPinEdgesToSuperviewEdges(with: nameInsets, excludingEdge: .bottom)
     }
 }
-

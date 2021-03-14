@@ -8,5 +8,6 @@ target 'dStar' do
   # Pods for dStar
   pod 'Alamofire', '~> 5.2'
   pod 'PureLayout'
+  pod 'SwiftLint'
 
 end

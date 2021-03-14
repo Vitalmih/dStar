@@ -161,6 +161,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 5EAC36B625F388CE00BF9072 /* Build configuration list for PBXNativeTarget "dStar" */;
 			buildPhases = (
+				5E773A3C25FE39EF00647445 /* Swift Lint */,
 				DC4675C0CB3C937E93BDCBED /* [CP] Check Pods Manifest.lock */,
 				5EAC369B25F388C500BF9072 /* Sources */,
 				5EAC369C25F388C500BF9072 /* Frameworks */,
@@ -237,6 +238,24 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-dStar/Pods-dStar-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
+		};
+		5E773A3C25FE39EF00647445 /* Swift Lint */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Swift Lint";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\"${PODS_ROOT}/SwiftLint/swiftlint\"\n";
 		};
 		DC4675C0CB3C937E93BDCBED /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;

@@ -215,16 +215,15 @@ extension MainViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: RepositoryCell.Identifier) as! RepositoryCell
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: RepositoryCell.Identifier) as? RepositoryCell else { return UITableViewCell() }
         if isSearching {
             let searchWord = searchResults[indexPath.row].searchWord
             cell.setTitle(name: searchWord?.maxLength(length: 30) ?? "N/A")
-            return cell
         } else {
             let repository = receivedRepositories[indexPath.row]
             cell.setTitle(name: repository.name.maxLength(length: 30))
-            return cell
         }
+        return cell
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
