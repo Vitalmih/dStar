@@ -8,7 +8,7 @@
 import Foundation
 import Alamofire
 
-protocol RepositoriesNetworkManagerProtocol {
+protocol RepositoriesNetworkManagerProtocol: AnyObject {
     var delegate: RepositoriesNetworkManagerDelegate? { get set }
     
     func getRepositories(with word: String, page: Int)
@@ -26,19 +26,19 @@ enum SortType: String {
     case helpWantedIssues = "help-wanted-issues"
 }
 
-class APIManager: RepositoriesNetworkManagerProtocol {
+final class APIManager: RepositoriesNetworkManagerProtocol {
     
     var delegate: RepositoriesNetworkManagerDelegate?
     private let baseURL = "https://api.github.com/search/repositories?"
     
     func getRepositories(with word: String, page: Int = 1) {
-        performRequest(pageNumber: page, word, sortBy: .star)
+        performRequest(pageNumber: page, word: word, sortBy: SortType.star)
     }
     
-    private func performRequest(pageNumber: Int, perPage: Int = 30, _ word: String, sortBy: SortType) {
-        let url = "\(baseURL)sort=\(SortType.self)&page=\(pageNumber)&per_page=\(perPage)&q=\(word)"
-        
-        AF.request(url, method: .get).responseJSON { response in
+    private func performRequest(pageNumber: Int, perPage: Int = 30, word: String, sortBy: SortType) {
+        let urlString = "\(baseURL)sort=\(SortType.self)&page=\(pageNumber)&per_page=\(perPage)&q=\(word)"
+        print(urlString)
+        AF.request(urlString, method: .get).responseJSON { response in
             switch response.result {
             case .success:
                 let decoder = JSONDecoder()

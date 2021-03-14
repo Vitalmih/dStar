@@ -10,9 +10,9 @@ import CoreData
 import PureLayout
 import SafariServices
 
-class DetailViewController: UIViewController {
+final class DetailViewController: UIViewController {
     
-    var detailRepositoryData: Items?
+    var detailRepositoryData: Item
     
     lazy var avatar: UIImageView = {
         let imageView = UIImageView(image: UIImage(named: "avatar"))
@@ -74,6 +74,15 @@ class DetailViewController: UIViewController {
         return view
     }()
     
+    init(with repository: Item) {
+        self.detailRepositoryData = repository
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -84,7 +93,7 @@ class DetailViewController: UIViewController {
     }
     
     @objc func searchButtnPressed() {
-        if let url = URL(string: detailRepositoryData?.url ?? "") {
+        if let url = URL(string: detailRepositoryData.url) {
             let config = SFSafariViewController.Configuration()
             config.entersReaderIfAvailable = true
             let vc =  SFSafariViewController(url: url, configuration: config)
@@ -93,20 +102,21 @@ class DetailViewController: UIViewController {
     }
     
     private func fetchData() {
-        repositoryName.text = detailRepositoryData?.name
-        starsCountLabel.text =  String(detailRepositoryData!.starsCount)
-        avatar.downloaded(from: detailRepositoryData?.owner?.avatarURL ?? "")
+        repositoryName.text = detailRepositoryData.name
+        starsCountLabel.text =  String(detailRepositoryData.starsCount)
+        avatar.downloaded(from: detailRepositoryData.owner?.avatarURL ?? "")
     }
     
     private func configureNavigationBar() {
-        navigationController?.navigationBar.prefersLargeTitles = true
-        navigationItem.title = NavigationTitle.Repository.rawValue
+        let navigation = navigationController?.navigationBar
+        navigation?.prefersLargeTitles = true
+        navigationItem.title = "Repository"
         navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(handleCancelButton))
-        navigationController?.navigationBar.tintColor = .black
-        navigationController?.navigationBar.backgroundColor = .systemTeal
-        navigationController?.navigationBar.barTintColor = .systemTeal
-        navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.black]
-        navigationController?.navigationBar.largeTitleTextAttributes = [.foregroundColor: UIColor.black]
+        navigation?.tintColor = .black
+        navigation?.backgroundColor = .systemTeal
+        navigation?.barTintColor = .systemTeal
+        navigation?.titleTextAttributes = [.foregroundColor: UIColor.black]
+        navigation?.largeTitleTextAttributes = [.foregroundColor: UIColor.black]
     }
     
     @objc func handleCancelButton() {
@@ -114,12 +124,12 @@ class DetailViewController: UIViewController {
     }
     
     func addSubviews() {
-        self.view.addSubview(upperView)
-        self.view.addSubview(repositoryName)
-        self.view.addSubview(starsLabel)
-        self.view.addSubview(avatar)
-        self.view.addSubview(searchButton)
-        self.view.addSubview(starsCountLabel)
+        view.addSubview(upperView)
+        view.addSubview(repositoryName)
+        view.addSubview(starsLabel)
+        view.addSubview(avatar)
+        view.addSubview(searchButton)
+        view.addSubview(starsCountLabel)
     }
     
     func setupConstraints() {

@@ -6,11 +6,12 @@
 //
 
 import UIKit
+import PureLayout
 
-class RepositoryCell: UITableViewCell {
+final class RepositoryCell: UITableViewCell {
     
     static let Identifier = "RepositoryCell"
-    var repositoryName = UILabel()
+    private let repositoryName = UILabel()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -27,7 +28,6 @@ class RepositoryCell: UITableViewCell {
     }
     
     private func configureTitleLabel() {
-        repositoryName.numberOfLines = 2
         let nameInsets = UIEdgeInsets(top: 16, left: 16, bottom: 0, right: 8)
         repositoryName.autoPinEdgesToSuperviewEdges(with: nameInsets, excludingEdge: .bottom)
     }

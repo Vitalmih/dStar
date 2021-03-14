@@ -8,8 +8,6 @@
 import Foundation
 import UIKit
 
-// Based on stackOverFlow
-
 extension String {
     func maxLength(length: Int) -> String {
         var str = self

@@ -9,23 +9,25 @@ import UIKit
 import CoreData
 import PureLayout
 
-enum NavigationTitle: String {
-    case Repositories
-    case History
-    case Repository
-}
-
-class MainViewController: UIViewController {
+final class MainViewController: UIViewController {
     
-    var searchResults = [SearchResultsModel]()
-    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-    var apiManager: RepositoriesNetworkManagerProtocol?
+    private enum NavigationTitle: String {
+        case Repositories
+        case History
+    }
+    
+    private let context: NSManagedObjectContext
+    private let apiManager: RepositoriesNetworkManagerProtocol
+    
+    private var searchResults = [SearchResultsModel]()
     private var paginationSearchString = ""
     private var isSearching = false
-    private var receivedRepositories = [Items]()
+    private var receivedRepositories = [Item]()
     private let searchBar = UISearchBar()
-    var searchWord = ""
-    var tableView = UITableView()
+    private var searchWord = ""
+    private let tableView = UITableView()
+    private var currentPage = 1
+    
     var upperView: UIView = {
         let view = UIView()
         view.autoSetDimension(.height, toSize: 128)
@@ -33,10 +35,20 @@ class MainViewController: UIViewController {
         return view
     }()
     
+    init(context: NSManagedObjectContext, apiManager: RepositoriesNetworkManagerProtocol) {
+        self.context = context
+        self.apiManager = apiManager
+        super.init(nibName: nil, bundle: nil)
+        apiManager.delegate = self
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        apiManager?.delegate = self
         configureNavigationBar()
         configureSearchBar()
         addSubViews()
@@ -72,15 +84,16 @@ class MainViewController: UIViewController {
     }
     
     private func configureNavigationBar() {
-        navigationController?.navigationBar.prefersLargeTitles = true
+        let navigation = navigationController?.navigationBar
+        navigation?.prefersLargeTitles = true
         navigationItem.title = NavigationTitle.Repositories.rawValue
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(handleShowSearchBar))
         navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .compose, target: self, action: #selector(handleShowHistorySearch))
-        navigationController?.navigationBar.tintColor = .black
-        navigationController?.navigationBar.backgroundColor = .systemTeal
-        navigationController?.navigationBar.barTintColor = .systemTeal
-        navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.black]
-        navigationController?.navigationBar.largeTitleTextAttributes = [.foregroundColor: UIColor.black]
+        navigation?.tintColor = .black
+        navigation?.backgroundColor = .systemTeal
+        navigation?.barTintColor = .systemTeal
+        navigation?.titleTextAttributes = [.foregroundColor: UIColor.black]
+        navigation?.largeTitleTextAttributes = [.foregroundColor: UIColor.black]
     }
     
     @objc func handleShowSearchBar() {
@@ -102,7 +115,6 @@ class MainViewController: UIViewController {
     private func configureSearchBar() {
         searchBar.searchTextField.leftView?.tintColor = .black
         searchBar.delegate = self
-        searchBar.sizeToFit()
         searchBar.barStyle = .black
         searchBar.searchTextField.textColor = .black
         searchBar.searchTextField.attributedPlaceholder = NSAttributedString(string: "Search here...", attributes: [NSAttributedString.Key.foregroundColor: UIColor.black])
@@ -117,49 +129,17 @@ class MainViewController: UIViewController {
         }
     }
     
-    private func search(shouldShow: Bool ) {
+    private func search(shouldShow: Bool) {
         showSearchBarButton(shouldShow: !shouldShow)
         searchBar.showsCancelButton = shouldShow
         navigationItem.titleView = shouldShow ? searchBar : nil
     }
-}
-
-//MARK: - UISearchBarDelegate
-extension MainViewController: UISearchBarDelegate {
     
-    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        search(shouldShow: false)
-        self.searchBar.text = ""
-    }
-    
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        var searchString = ""
-        guard let text = searchBar.text else { return }
-        searchWord = text
-        for char in text {
-            if char == " " {
-                searchString.append("+")
-            } else {
-                searchString.append(char)
-            }
-        }
-        paginationSearchString = searchString
-        apiManager?.getRepositories(with: searchString, page: 1)
-        receivedRepositories = []
-        searchString = ""
-        searchBar.text = ""
-        tableView.reloadData()
-    }
-}
-
-//MARK: - RepositoriesNetworkManagerDelegate
-extension MainViewController: RepositoriesNetworkManagerDelegate {
-    func didGetRepositories(repositories: Repositories) {
-        
+    private func saveToCoreData(items: [Item]) {
         let searchResultItem = SearchResultsModel(context: context)
         searchResultItem.searchWord = searchWord
         
-        let results: [Repository] = repositories.items.map { [unowned context] item in
+        let results: [Repository] = items.map { [unowned context] item in
             let repository = Repository(context: context)
             repository.id = Int64(item.id)
             repository.name = item.name
@@ -174,15 +154,56 @@ extension MainViewController: RepositoriesNetworkManagerDelegate {
         searchModelResults.addObjects(from: results)
         searchResultItem.results = searchModelResults
         saveResult()
+    }
+    
+    private func showDetails(with repository: Item) {
+        let dvc = DetailViewController(with: repository)
+        let nv = UINavigationController(rootViewController: dvc)
+        nv.modalPresentationStyle = .fullScreen
+        present(nv, animated: true, completion: nil)
+    }
+    
+    private func showAlert(title: String, buttonTitle: String, error: Error) {
+        let alert = UIAlertController(title: title, message: error.localizedDescription, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: buttonTitle, style: .destructive, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+    }
+}
+
+//MARK: - UISearchBarDelegate
+extension MainViewController: UISearchBarDelegate {
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        search(shouldShow: false)
+        self.searchBar.text = ""
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        guard let text = searchBar.text else { return }
+        searchWord = text.replacingOccurrences(of: " ", with: "+")
+        paginationSearchString = searchWord
+        apiManager.getRepositories(with: paginationSearchString, page: 1)
+        receivedRepositories = []
+        currentPage = 1
+        searchBar.text = ""
+        tableView.reloadData()
+    }
+}
+
+//MARK: - RepositoriesNetworkManagerDelegate
+extension MainViewController: RepositoriesNetworkManagerDelegate {
+    func didGetRepositories(repositories: Repositories) {
+        
+        if currentPage == 1 {
+            saveToCoreData(items: repositories.items)
+        }
         
         receivedRepositories.append(contentsOf: repositories.items)
         self.tableView.reloadData()
     }
     
     func didFailWithError(error: Error) {
-        let alert = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Ok", style: .destructive, handler: nil))
-        self.present(alert, animated: true, completion: nil)
+        showAlert(title: "Error", buttonTitle: "Ok", error: error)
     }
 }
 
@@ -190,11 +211,7 @@ extension MainViewController: RepositoriesNetworkManagerDelegate {
 extension MainViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if isSearching {
-            return searchResults.count
-        } else {
-            return receivedRepositories.count
-        }
+        isSearching ? searchResults.count : receivedRepositories.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -211,10 +228,9 @@ extension MainViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        var currentPage = 1
         if indexPath.row == receivedRepositories.count - 3 {
             currentPage += 1
-            apiManager?.getRepositories(with: paginationSearchString, page: currentPage)
+            apiManager.getRepositories(with: paginationSearchString, page: currentPage)
         }
     }
     
@@ -222,23 +238,20 @@ extension MainViewController: UITableViewDataSource, UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         if isSearching {
             isSearching = false
+            currentPage = 1
             navigationItem.title = NavigationTitle.Repositories.rawValue
             let historySearchWordRequest = searchResults[indexPath.row].searchWord ?? ""
-            let coreDataRepositoriesModel = searchResults[indexPath.row].results?.allObjects.compactMap { $0  as? Repository} ?? []
+            let coreDataRepositoriesModel = searchResults[indexPath.row].results?.allObjects.compactMap {$0 as? Repository} ?? []
             receivedRepositories = []
             coreDataRepositoriesModel.forEach { item in
-                let repositoryItem = Items(id: Int(item.id), nodeID: item.nodeID ?? "", name: item.name ?? "", fullName: item.fullName ?? "", owner: nil, url: item.url ?? "", starsCount: Int(item.starsCount))
+                let repositoryItem = Item(id: Int(item.id), nodeID: item.nodeID ?? "", name: item.name ?? "", fullName: item.fullName ?? "", owner: nil, url: item.url ?? "", starsCount: Int(item.starsCount))
                 receivedRepositories.append(repositoryItem)
             }
             paginationSearchString = historySearchWordRequest
             tableView.reloadData()
         } else {
             let repository = receivedRepositories[indexPath.row]
-            let dvc = DetailViewController()
-            dvc.detailRepositoryData = repository
-            let nv = UINavigationController(rootViewController: dvc)
-            nv.modalPresentationStyle = .fullScreen
-            present(nv, animated: true, completion: nil)
+            showDetails(with: repository)
         }
     }
 }
@@ -249,7 +262,7 @@ extension MainViewController {
         do {
             try context.save()
         } catch {
-            print(error)
+            showAlert(title: "Error", buttonTitle: "Ok", error: error)
         }
     }
     
@@ -258,7 +271,7 @@ extension MainViewController {
         do {
             searchResults = try context.fetch(request)
         } catch {
-            print(error)
+            showAlert(title: "Error", buttonTitle: "Ok", error: error)
         }
     }
 }
