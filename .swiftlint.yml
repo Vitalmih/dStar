@@ -1,0 +1,23 @@
+line_length:
+- 250 # warning
+- 350 # error
+disabled_rules:
+- trailing_whitespace
+- file_length
+- type_body_length
+- identifier_name
+- syntactic_sugar
+- weak_delegate
+- comment_spacing
+- identifier_name
+- nesting
+- for_where
+- cyclomatic_complexity
+- empty_enum_arguments
+- identifier_name
+- type_name
+- function_body_length
+- redundant_optional_initialization
+- operator_whitespace
+- unused_setter_value
+- mark

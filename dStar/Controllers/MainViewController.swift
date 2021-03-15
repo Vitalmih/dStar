@@ -27,6 +27,7 @@ final class MainViewController: UIViewController {
     private var searchWord = ""
     private let tableView = UITableView()
     private var currentPage = 1
+    private var totalCountOfPages = 0
     
     var upperView: UIView = {
         let view = UIView()
@@ -196,9 +197,11 @@ extension MainViewController: RepositoriesNetworkManagerDelegate {
         
         if currentPage == 1 {
             saveToCoreData(items: repositories.items)
+            totalCountOfPages = repositories.totalCount
         }
         
         receivedRepositories.append(contentsOf: repositories.items)
+        
         self.tableView.reloadData()
     }
     
@@ -227,9 +230,12 @@ extension MainViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        if indexPath.row == receivedRepositories.count - 3 {
-            currentPage += 1
-            apiManager.getRepositories(with: paginationSearchString, page: currentPage)
+        
+        if currentPage <= totalCountOfPages {
+            if indexPath.row == receivedRepositories.count - 3 {
+                currentPage += 1
+                apiManager.getRepositories(with: paginationSearchString, page: currentPage)
+            }
         }
     }
     
